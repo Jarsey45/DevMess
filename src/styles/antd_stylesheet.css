@@ -1,0 +1,33 @@
+.layout{
+  min-height: inherit;
+}
+
+.header{
+  background: #610b00;
+}
+
+.content{
+  background: #fff2e8;
+  padding: 0 50px;
+}
+
+.form{
+  margin-top: 15vh;
+  padding: 10vh;
+  background-color: white;
+  border: 1px solid #ff9c6e;
+  border-radius: 5px;
+}
+
+.ant-btn-primary {
+  background-color: #52c41a;
+}
+
+.ant-btn-secondary {
+  background-color: #ffccc7;
+}
+
+.footer {
+  background: #fff2e8;
+}
+
