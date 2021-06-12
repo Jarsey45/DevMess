@@ -13,18 +13,10 @@ import { UserData } from '../types/interfaces';
 
 
 // For Firebase JS SDK v7.20.0 and later, measurementId is optional
-const firebaseConfig = {
-  apiKey: "AIzaSyCuR7nDg8YbiFwRStwgjkvaxZdjjcS9dBU",
-  authDomain: "react-native-messengerdev.firebaseapp.com",
-  projectId: "react-native-messengerdev",
-  storageBucket: "react-native-messengerdev.appspot.com",
-  messagingSenderId: "935130835466",
-  appId: "1:935130835466:web:f2e94b3186662bc8784df3",
-  measurementId: "G-QQ0QW95KET"
-};
+import {FIREBASE_CONFIG} from './Env'
 
 
-firebase.initializeApp(firebaseConfig);
+firebase.initializeApp(FIREBASE_CONFIG);
 
 
 
