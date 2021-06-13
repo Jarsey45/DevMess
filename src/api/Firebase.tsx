@@ -13,9 +13,9 @@ import { UserData } from '../types/interfaces';
 
 
 // For Firebase JS SDK v7.20.0 and later, measurementId is optional
-import {FIREBASE_CONFIG} from './Env'
+import { FIREBASE_CONFIG } from './Env'
 
-
+//TODO: Add rules to firestoreDB after goin public
 firebase.initializeApp(FIREBASE_CONFIG);
 
 

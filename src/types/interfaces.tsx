@@ -1,3 +1,4 @@
+//SELF-EXPLENATORY XD
 export interface UserData {
   username?: string;
   password: string;
@@ -6,7 +7,17 @@ export interface UserData {
   remember?: boolean;
 }
 
+//LOGIN/SIGNUP VIEWS PROPS
 export interface LoginProps {
   handleClick: (data: UserData) => Promise<void>;
   setRegister: () => void;
+}
+
+//TO CONFIGURE
+export interface AlertProps {
+  title?: string;
+  message?: string
+  handleOk: () => void;
+  handleCancel?: () => void;
+  //...
 }
