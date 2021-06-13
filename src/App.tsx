@@ -1,5 +1,5 @@
 import React from 'react';
-import './App.css';
+import './App.less';
 import LoginView from './Components/Login/LoginView';
 
 function App() {

@@ -14,9 +14,11 @@ export default class DefaultAlert extends Component<AlertProps> {
   render() {
     return (
       <Alert
+        style={{ marginTop: '1vh' }}
         message={this.props?.title}
         description={this.props?.message}
         type="warning"
+        afterClose={this.props.handleOk} // TODO: NAPRAW TO CHUJU
         action={
           <Space direction="vertical">
             <Button size="small" type="primary" onClick={this.props.handleOk}>

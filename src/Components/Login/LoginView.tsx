@@ -1,7 +1,7 @@
 import React, { useCallback, useState } from 'react'
 import { useSelector, useDispatch } from 'react-redux'
-import { Layout, Row, Col, Divider } from 'antd';
-import '../../styles/antd_stylesheet.css';
+import { Layout, Row, Col, Divider, Space } from 'antd';
+import '../../styles/antd_stylesheet.less';
 import SignInView from './SignInView';
 import SignUpView from './SignUpView';
 //import { userLogin, addAlert } from '../../features/loginReducers'
@@ -38,7 +38,7 @@ const LoginView: React.FC = () => {
                   title: "Error",
                   message: "Could not log in, check password and e-mail. ",
                 },
-                id: alerts.length
+                id: Math.floor(Math.random() * (10000 - 1)) + 1
               }
             )
           )
@@ -67,7 +67,7 @@ const LoginView: React.FC = () => {
                   title: "Error",
                   message: "Could not resolve signup, please try again. ",
                 },
-                id: alerts.length
+                id: Math.floor(Math.random() * (10000 - 1)) + 1
               }
             )
           )
@@ -91,14 +91,18 @@ const LoginView: React.FC = () => {
           </Col>
           <Col span={6}></Col>
         </Row>
-        {alerts.map((el: { element: any, id: number }) =>
-          <DefaultAlert
-            title={el.element.title}
-            message={el.element.message}
-            handleOk={() => { discardAlert(el.id) }}
-            handleCancel={() => { console.log('cancel') }}
-          ></DefaultAlert>
-        )}
+        <Row style={{ paddingBottom: '1vh' }} >
+          <Col span={12} offset={6} >
+            {alerts.map((el: { element: any, id: number }) =>
+              <DefaultAlert
+                title={el.element.title}
+                message={el.element.message}
+                handleOk={() => { discardAlert(el.id) }}
+                handleCancel={() => { console.log('cancel') }}
+              ></DefaultAlert>
+            )}
+          </Col>
+        </Row>
 
       </Content>
       <Footer className="footer">

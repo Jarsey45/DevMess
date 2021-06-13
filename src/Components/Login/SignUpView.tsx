@@ -1,7 +1,7 @@
 import { useState } from 'react';
 import { UserData, LoginProps } from '../../types/interfaces';
 import { Form, Input, Button, Checkbox, Space } from 'antd';
-import '../../styles/antd_stylesheet.css';
+import '../../styles/antd_stylesheet.less';
 
 const layout = {
   labelCol: { span: 6 },
