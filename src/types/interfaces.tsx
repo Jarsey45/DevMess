@@ -9,8 +9,13 @@ export interface UserData {
 
 //LOGIN/SIGNUP VIEWS PROPS
 export interface LoginProps {
+  size: { WindowHeight: number, WindowWidth: number }
   handleClick: (data: UserData) => Promise<void>;
   setRegister: () => void;
+}
+
+export interface MetroProps {
+
 }
 
 //TO CONFIGURE

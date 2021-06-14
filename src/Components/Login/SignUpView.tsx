@@ -16,6 +16,7 @@ const tailLayout = {
 
 const SignUpView: React.FC<LoginProps> = ({ handleClick, setRegister }) => {
 
+  //TODO: Add animations on change
   return (
     <Form
       {...layout}
@@ -24,42 +25,55 @@ const SignUpView: React.FC<LoginProps> = ({ handleClick, setRegister }) => {
       initialValues={{ remember: true }}
       onFinish={(e) => handleClick({ ...e, type: "register" })}
     >
+      <img
+        alt="logo"
+        src="./logo2.png"
+        style={{ height: '15vh', marginLeft: 'auto', marginRight: 'auto' }}
+      />
+
       <Form.Item
         label="Nick"
         name="username"
         rules={[{ required: true, message: "Podaj swój nick!" }]}
+        style={{ fontWeight: 'bolder' }}
       >
         <Input />
       </Form.Item>
 
       <Form.Item
-        label="Mail"
+        label="Email"
         name="mail"
         rules={[{ required: true, message: "Podaj swój mail!" }]}
+        style={{ fontWeight: 'bolder' }}
       >
         <Input />
       </Form.Item>
 
       <Form.Item
-        label="Hasło"
+        label="Password"
         name="password"
         rules={[{ required: true, message: "Podaj swoje hasło!" }]}
+        style={{ fontWeight: 'bolder' }}
       >
         <Input.Password />
       </Form.Item>
 
-      <Form.Item {...tailLayout} name="remember" valuePropName="checked">
+      <Form.Item {...tailLayout}
+        name="remember"
+        valuePropName="checked"
+        style={{ fontWeight: 'bolder' }}
+      >
         <Checkbox>Remember me</Checkbox>
       </Form.Item>
 
       <Form.Item {...tailLayout}>
         <Space>
           <Button type="primary" htmlType="submit">
-            Zarejestruj się
+            Register
           </Button>
-          lub
+          or
           <Button type="default" onClick={() => setRegister()}>
-            Zaloguj się
+            Sign in now!
           </Button>
         </Space>
       </Form.Item>

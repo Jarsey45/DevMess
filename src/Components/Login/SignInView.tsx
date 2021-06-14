@@ -1,6 +1,6 @@
 import { useState } from 'react';
 import { LoginProps } from '../../types/interfaces';
-import { Form, Input, Button, Checkbox, Space } from 'antd';
+import { Form, Input, Button, Checkbox, Space, Row, Col } from 'antd';
 import '../../styles/antd_stylesheet.less';
 
 const layout = {
@@ -9,7 +9,8 @@ const layout = {
 }
 
 const tailLayout = {
-  wrapperCol: { offset: 6, span: 12 }
+  wrapperCol: { offset: 6, span: 12 },
+  sm: { offset: 2, span: 6 }
 }
 
 
@@ -17,6 +18,7 @@ const tailLayout = {
 
 const SignInView: React.FC<LoginProps> = ({ handleClick, setRegister }) => {
 
+  //TODO: Add animations on change
   return (
     <Form
       {...layout}
@@ -25,10 +27,17 @@ const SignInView: React.FC<LoginProps> = ({ handleClick, setRegister }) => {
       initialValues={{ remember: true }}
       onFinish={(e) => handleClick({ ...e, type: "login" })}
     >
+      <img
+        alt="logo"
+        src="./logo2.png"
+        style={{ height: '15vh', marginLeft: 'auto', marginRight: 'auto' }}
+      />
+
       <Form.Item
-        label="Mail"
+        label="Email"
         name="mail"
         rules={[{ required: true, message: "Podaj swój mail!" }]}
+        style={{ fontWeight: 'bolder' }}
       >
         <Input />
       </Form.Item>
@@ -37,22 +46,23 @@ const SignInView: React.FC<LoginProps> = ({ handleClick, setRegister }) => {
         label="Hasło"
         name="password"
         rules={[{ required: true, message: "Podaj swoje hasło!" }]}
+        style={{ fontWeight: 'bold' }}
       >
         <Input.Password />
       </Form.Item>
 
-      <Form.Item {...tailLayout} name="remember" valuePropName="checked">
+      <Form.Item {...tailLayout} name="remember" valuePropName="checked" style={{ fontWeight: 'bold' }}>
         <Checkbox>Remember me</Checkbox>
       </Form.Item>
 
-      <Form.Item {...tailLayout}>
+      <Form.Item {...tailLayout} >
         <Space>
-          <Button type="primary" htmlType="submit">
-            Wejdź
+          <Button type="primary" htmlType="submit" >
+            Sign In
           </Button>
-          lub
+          or
           <Button type="default" onClick={() => setRegister()} >
-            Zarejestruj się
+            Register now!
           </Button>
         </Space>
       </Form.Item>

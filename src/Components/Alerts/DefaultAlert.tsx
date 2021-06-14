@@ -21,10 +21,10 @@ export default class DefaultAlert extends Component<AlertProps> {
         afterClose={this.props.handleOk} // TODO: NAPRAW TO CHUJU
         action={
           <Space direction="vertical">
-            <Button size="small" type="primary" onClick={this.props.handleOk}>
+            <Button type="primary" onClick={this.props.handleOk}>
               OK
             </Button>
-            <Button size="small" danger type="ghost" onClick={this.props.handleCancel} >
+            <Button danger type="ghost" onClick={this.props.handleCancel} >
               Cancel
             </Button>
           </Space>

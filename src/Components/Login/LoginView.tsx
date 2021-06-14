@@ -1,20 +1,23 @@
-import React, { useCallback, useState } from 'react'
+import React, { useState } from 'react'
 import { useSelector, useDispatch } from 'react-redux'
-import { Layout, Row, Col, Divider, Space } from 'antd';
+import { Layout, Row, Col, Divider } from 'antd';
 import '../../styles/antd_stylesheet.less';
 import SignInView from './SignInView';
 import SignUpView from './SignUpView';
-//import { userLogin, addAlert } from '../../features/loginReducers'
+import { useHistory } from "react-router-dom";
 import DefaultAlert from '../Alerts/DefaultAlert';
 import { UserData } from '../../types/interfaces';
 import { LoginUser, RegisterUser } from '../../api/Firebase';
 import { RootState } from '../../app/store';
-import { addAlert, disableAlert } from '../../features/loginReducers';
+import { addAlert, disableAlert, userLogin } from '../../features/loginReducers';
+import { useWindowSize } from '../../features/Hooks';
 const { Header, Content, Footer } = Layout;
 
 
 const LoginView: React.FC = () => {
+  const history = useHistory();
   const [wantToRegister, setWantRegister] = useState(false)
+  const [WindowHeight, WindowWidth] = useWindowSize();
   const alerts = useSelector((state: RootState) => state.login.alerts);
   const dispatch = useDispatch();
 
@@ -24,16 +27,21 @@ const LoginView: React.FC = () => {
   }
 
   const tryLog = async (data: UserData) => {
+    //TODO: CHECK DATA FORMAT WITH REGEX
     switch (data.type) {
       case "login":
 
         const didLogIn = await LoginUser(data, {});
-        if (didLogIn.valueOf())
-          console.log('Logged', '=>', data.username)
+        if (didLogIn.status) {
+
+          console.log('Logged', '=>', didLogIn.data)
+          dispatch(userLogin(didLogIn.data));
+          history.push('/metro')
+        }
         else
           dispatch(
             addAlert(
-              {// shouldn't delete all items from alerts but for now it does
+              {
                 element: {
                   title: "Error",
                   message: "Could not log in, check password and e-mail. ",
@@ -42,18 +50,7 @@ const LoginView: React.FC = () => {
               }
             )
           )
-        // <DefaultAlert
-        //           title="Error"
-        //           message="Could not log in, check password and e-mail. "
-        //           handleOk={() => { discardAlert(alerts.length) }}
-        //           handleCancel={() => { console.log('cancel') }}
-        //         ></DefaultAlert>
-
-        if (didLogIn)
-          return;//TODO: jeżeli zaloguje to wjebać to wszystko do store
-        else
-
-          break;
+        break;
       case "register":
         const didRegister = await RegisterUser(data, {});
 
@@ -62,7 +59,7 @@ const LoginView: React.FC = () => {
         else
           dispatch(
             addAlert(
-              {// shouldn't delete all items from alerts but for now it does
+              {
                 element: {
                   title: "Error",
                   message: "Could not resolve signup, please try again. ",
@@ -79,20 +76,29 @@ const LoginView: React.FC = () => {
   return (
     <Layout className="layout">
       <Header className="header">
-        DevMess (Logo)
+        <img alt="logo" src="./logo2.png" style={{ height: 'inherit', paddingTop: '1vh' }} />
       </Header>
       <Content className="content">
         <Row justify="space-between" align="middle">
           <Col span={6}></Col>
           <Col span={12}>
             {wantToRegister ?
-              <SignUpView handleClick={tryLog} setRegister={() => { setWantRegister(false) }} ></SignUpView> :
-              <SignInView handleClick={tryLog} setRegister={() => { setWantRegister(true) }}></SignInView>}
+              <SignUpView
+                size={{ WindowHeight, WindowWidth }}
+                handleClick={tryLog}
+                setRegister={() => { setWantRegister(false) }}>
+              </SignUpView>
+              :
+              <SignInView
+                size={{ WindowHeight, WindowWidth }}
+                handleClick={tryLog}
+                setRegister={() => { setWantRegister(true) }}>
+              </SignInView>}
           </Col>
           <Col span={6}></Col>
         </Row>
-        <Row style={{ paddingBottom: '1vh' }} >
-          <Col span={12} offset={6} >
+        <Row >
+          <Col span={12} offset={6}  >
             {alerts.map((el: { element: any, id: number }) =>
               <DefaultAlert
                 title={el.element.title}
@@ -106,8 +112,8 @@ const LoginView: React.FC = () => {
 
       </Content>
       <Footer className="footer">
-        <Divider style={{ borderWidth: 2, borderColor: "1px solid #610b00" }} />
-        Barłomiej Kowalczyk 2021
+        <Divider />
+        <div className='footText'>Barłomiej Kowalczyk 2021</div>
       </Footer>
     </Layout>
   )

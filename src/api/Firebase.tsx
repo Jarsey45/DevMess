@@ -23,25 +23,52 @@ firebase.initializeApp(FIREBASE_CONFIG);
 export const auth = firebase.auth();
 export const firestore = firebase.firestore();
 
-
-export const LoginUser = async (user: UserData, additionalData: {}) => {
-  if (!user) return false;
-
+/**
+ * Tries to authenticate user
+ * @param user input with data from Form Object
+ * @param additionalData with some options for auth
+ * @returns Promise<{}> with status and user data from firebase
+ * */
+export const LoginUser = async (user: UserData, additionalData?: {}) => {
+  if (!user) return Promise.resolve({ status: false, data: {} });
   const { mail, password } = user;
 
-  auth.signInWithEmailAndPassword(mail, password)
-    .then((userCredential) => {
-      const user = userCredential;
-      //TODO: Forward to userUI
-      return true;
-    })
-    .catch((error) => {
-      let { code, message } = error;
-      console.log(code, '=>', message);
-      return false;
-    });
+  try {
+    const { user } = await auth.signInWithEmailAndPassword(mail, password);
+    if (user) {
+      //getting user Username
+      const userDoc = await firestore.collection('users').doc(user.uid).get();
+      const userDbData = userDoc.data();
+      //TODO: SET DOCUMENT DATE AND STATUS AFTER LOGIN
 
-  return false;
+      //getting User token
+      const userToken = await auth.currentUser?.getIdToken();
+
+      //changing user LastLogin Date
+      firestore.collection('users').doc(user.uid).set({
+        last_logged: firebase.firestore.Timestamp.fromDate(new Date()),
+        status: true
+      }, { merge: true })
+
+      return Promise.resolve(
+        {
+          status: true,
+          data: {
+            username: userDbData?.username,
+            id: user.uid,
+            token: userToken
+          }
+        }
+      );
+    }
+  } catch (e) {
+    //throw new Error(e); TODO: handle throwing error without react base error handling
+    console.error(`Error: ${e.code}`, '=>', e.message)
+    return Promise.resolve({ status: false, data: {} });
+  }
+
+
+  return Promise.resolve({ status: false, data: {} });
 }
 
 export const RegisterUser = async (user: UserData, additionalData: {}) => {
@@ -57,7 +84,7 @@ export const RegisterUser = async (user: UserData, additionalData: {}) => {
       //adding new doc to firebase db
       let docData = {
         last_logged: firebase.firestore.Timestamp.fromDate(new Date()),
-        mail,
+        email: mail,
         status: true,
         username
       };
@@ -79,6 +106,14 @@ export const RegisterUser = async (user: UserData, additionalData: {}) => {
     });
 
   return false;
+}
 
 
+export const getSignedInUser = () => {
+  auth.onAuthStateChanged((user) => {
+    if (user)
+      return user;
+
+    return null;
+  });
 }

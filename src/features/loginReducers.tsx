@@ -1,23 +1,25 @@
 /* eslint-disable no-unreachable */
-import { createSlice, PayloadAction } from '@reduxjs/toolkit';
+import { createSlice } from '@reduxjs/toolkit';
 
 interface InitState {
   logged: {
     id: string;
-    status: boolean
-    username: string
+    token: string;
+    status: boolean;
+    username: string;
   };
   alerts: Array<{
     element: {
       title: string;
       message: string;
     },
-    id: number
+    id: number;
   }>
 }
 
 const initialState: InitState = {
   logged: {
+    token: '',
     id: '',
     status: false,
     username: ''
@@ -30,32 +32,9 @@ export const loginSlice = createSlice({
   initialState,
   reducers: {
     userLogin: (state, action) => {
-      console.log(action, state);
-      // switch (action.type) {
-      //   case "log_in":
-      //     return {
-      //       ...state,
-      //       logged: {
-      //         id: action.payload.id,
-      //         status: true,
-      //         username: action.payload.username
-      //       }
-      //     }
-      //   case "add_alert":
-      //     console.log(state)
-      //     return {
-      //       ...state,
-      //       alerts: [{
-      //         visibility: true,
-      //         element: {
-      //           title: 'string',
-      //           message: 'string',
-      //         }
-      //       }]
-      //     }
-      //     break;
-      //}
-
+      state.logged = action.payload;
+      state.logged.status = true;
+      localStorage.setItem('TOKEN', action.payload.token);
     },
     addAlert: (state, action) => {
       state.alerts.push(action.payload)
