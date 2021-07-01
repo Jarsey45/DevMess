@@ -2,6 +2,7 @@ import React, { useState } from 'react'
 import { useSelector, useDispatch } from 'react-redux'
 import { Layout, Row, Col, Divider } from 'antd';
 import '../../styles/antd_stylesheet.less';
+import logo from '../images/logo2.png';
 import SignInView from './SignInView';
 import SignUpView from './SignUpView';
 import { useHistory } from "react-router-dom";
@@ -13,7 +14,11 @@ import { addAlert, disableAlert, userLogin } from '../../features/loginReducers'
 import { useWindowSize } from '../../features/Hooks';
 const { Header, Content, Footer } = Layout;
 
-
+/**
+ * Login Functional Component that contains logic of login and/or register
+ * @param props
+ * @returns JSX.Element
+ * */
 const LoginView: React.FC = () => {
   const history = useHistory();
   const [wantToRegister, setWantRegister] = useState(false)
@@ -76,7 +81,7 @@ const LoginView: React.FC = () => {
   return (
     <Layout className="layout">
       <Header className="header">
-        <img alt="logo" src="./logo2.png" style={{ height: 'inherit', paddingTop: '1vh' }} />
+        <img alt="logo" src={logo} style={{ height: 'inherit', paddingTop: '1vh' }} />
       </Header>
       <Content className="content">
         <Row justify="space-between" align="middle">

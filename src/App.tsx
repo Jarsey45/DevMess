@@ -1,4 +1,4 @@
-import React, { useEffect, useState } from 'react';
+import { useEffect, useState } from 'react';
 import './App.less';
 import {
   BrowserRouter as Router,
@@ -8,7 +8,6 @@ import {
 } from "react-router-dom";
 
 import LoginView from './Components/Login/LoginView';
-import { RootState } from './app/store';
 import { auth } from './api/Firebase';
 import MetroFView from './Components/Metro/MetroFView';
 

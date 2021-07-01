@@ -4,6 +4,8 @@
 @test: #4CB084;
 @border-color: #de3c4b;
 @bckgrd-color : #212121;
+@menu-color : #111111;
+@text-color : #a1a1a1;
 
 // @master-color: #FF8C91 ;
 // @scnd-color: #FFC5C5;
@@ -14,15 +16,34 @@
 
 .layout{
   min-height: inherit;
+  background: @bckgrd-color;
+}
+
+.logoDiv{
+  width:inherit;
+  height: 64px;
+  background: @master-color;
+  display:flex;
+  align-items: center;
+}
+
+.logoDiv > .logo{
+  width: 100%;
 }
 
 .header{
   background: @master-color;
 }
 
+.sider{
+  background: @menu-color;
+}
+
 .content{
   background: @bckgrd-color;
   padding: 0 50px;
+  display:block;
+  //height:100%;
 }
 
 .form{
@@ -32,6 +53,60 @@
   border: 1px solid @border-color;
   border-radius: 5px;
 }
+
+.menu {
+  background: @menu-color;
+  
+}
+
+.ant-menu-inline, .ant-menu-vertical, .ant-menu-vertical-left{
+  border-right: 1px solid @menu-color;
+}
+
+.menu > .menuItem {
+  background: @menu-color;
+  color: @text-color;
+  
+}
+
+.subMenu {
+  background: @menu-color;
+  color: @text-color;
+}
+.ant-menu-sub.ant-menu-inline{
+  background: @bckgrd-color;
+  color: @text-color;
+}
+
+//TODO:HAVE NO FUCKING IDEA HOW TO REMOVE THOSE INDENTATIONS
+.ant-menu:not(.ant-menu-horizontal) .ant-menu-item-selected{
+  background-color: @scnd-color;
+  color: #000;
+}
+
+.ant-menu-item:hover{
+  transition: color 0.3s !important ;
+  color: #000;
+}
+
+.ant-menu-submenu-expand-icon, .ant-menu-submenu-arrow{
+  color: @text-color;
+}
+
+.ant-layout-sider-trigger{
+  background: @master-color;
+}
+
+.contentScreen{
+  padding: 24px;
+  border-radius: 5px;
+  margin: 1%;
+  min-height: 380px;
+  max-height: 95%;
+  background: @menu-color;
+  color: @text-color;
+}
+
 .footer {
   background: @bckgrd-color;
 }

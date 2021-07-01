@@ -18,7 +18,7 @@ export interface MetroProps {
 
 }
 
-//TO CONFIGURE
+//YET TO CONFIGURE
 export interface AlertProps {
   title?: string;
   message?: string

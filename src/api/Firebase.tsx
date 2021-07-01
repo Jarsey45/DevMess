@@ -24,7 +24,7 @@ export const auth = firebase.auth();
 export const firestore = firebase.firestore();
 
 /**
- * Tries to authenticate user
+ * Async function that tries to authenticate user
  * @param user input with data from Form Object
  * @param additionalData with some options for auth
  * @returns Promise<{}> with status and user data from firebase
@@ -61,16 +61,20 @@ export const LoginUser = async (user: UserData, additionalData?: {}) => {
         }
       );
     }
+    return Promise.resolve({ status: false, data: {} });
   } catch (e) {
     //throw new Error(e); TODO: handle throwing error without react base error handling
     console.error(`Error: ${e.code}`, '=>', e.message)
     return Promise.resolve({ status: false, data: {} });
   }
-
-
-  return Promise.resolve({ status: false, data: {} });
 }
 
+/**
+ * Async function that tries to Register user, also creates new document with user data 
+ * @param user input with data from Form Object
+ * @param additionalData with some options for auth
+ * @returns Promise<{}> with status and user data from firebase
+ * */
 export const RegisterUser = async (user: UserData, additionalData: {}) => {
   if (!user) return false;
 
@@ -106,14 +110,4 @@ export const RegisterUser = async (user: UserData, additionalData: {}) => {
     });
 
   return false;
-}
-
-
-export const getSignedInUser = () => {
-  auth.onAuthStateChanged((user) => {
-    if (user)
-      return user;
-
-    return null;
-  });
 }

@@ -1,7 +1,7 @@
-import { useState } from 'react';
-import { UserData, LoginProps } from '../../types/interfaces';
+import { LoginProps } from '../../types/interfaces';
 import { Form, Input, Button, Checkbox, Space } from 'antd';
 import '../../styles/antd_stylesheet.less';
+import logo from '../images/logoLogin.png';
 
 const layout = {
   labelCol: { span: 6 },
@@ -13,7 +13,10 @@ const tailLayout = {
 }
 
 
-
+/**
+ * Sign Up Component 
+ * @returns JSX.Element
+ * */
 const SignUpView: React.FC<LoginProps> = ({ handleClick, setRegister }) => {
 
   //TODO: Add animations on change
@@ -27,7 +30,7 @@ const SignUpView: React.FC<LoginProps> = ({ handleClick, setRegister }) => {
     >
       <img
         alt="logo"
-        src="./logo2.png"
+        src={logo}
         style={{ height: '15vh', marginLeft: 'auto', marginRight: 'auto' }}
       />
 
