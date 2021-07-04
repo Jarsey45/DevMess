@@ -8,6 +8,8 @@ import {
 import '../../styles/antd_stylesheet.less';
 import logo from '../images/logoMetro.png'
 import { useState } from 'react';
+import { auth } from '../../api/Firebase';
+import { MetroViewProps } from '../../types/interfaces';
 const { Header, Content, Sider } = Layout;
 const { SubMenu } = Menu;
 
@@ -16,9 +18,10 @@ const { SubMenu } = Menu;
  * @param props
  * @returns 
  * */
-const MetroView = () => {
+const MetroView: React.FC<MetroViewProps> = ({ teams, friends }) => {
+  let itemKeys = 0;
   const [collapsed, onCollapse] = useState(false);
-
+  console.log(teams, friends)
 
   return (
     <Layout className='layout' >
@@ -26,25 +29,28 @@ const MetroView = () => {
         <div className='logoDiv'>
           <img alt="logo" src={logo} className='logo' />
         </div>
-        <Menu className='menu' defaultSelectedKeys={['1']} mode="inline">
-          <Menu.Item className='menuItem' key="1" icon={<HomeOutlined />} >
+        <Menu className='menu' defaultSelectedKeys={['0']} mode="inline">
+          <Menu.Item className='menuItem' key={(itemKeys++).toString()} icon={<HomeOutlined />}  >
             Dashboard
           </Menu.Item>
-          <Menu.Item className='menuItem' key="2" icon={<CoffeeOutlined />}>
+          <Menu.Item className='menuItem' key={itemKeys++} icon={<CoffeeOutlined />}>
             Chilling (DW)
           </Menu.Item>
           <SubMenu className='subMenu' key="sub1" icon={<MessageOutlined />} title="Messages">
-            <Menu.Item className='menuItem' key="3">Tom</Menu.Item>
-            <Menu.Item className='menuItem' key="4">Bill</Menu.Item>
-            <Menu.Item className='menuItem' key="5">Alex</Menu.Item>
+            {friends.map(friend => <Menu.Item className='menuItem' key={itemKeys++}>{friend.name}</Menu.Item>)}
           </SubMenu>
           <SubMenu className='subMenu' key="sub2" icon={<TeamOutlined />} title="Teams">
-            <Menu.Item className='menuItem' key="6">Team 1</Menu.Item>
-            <Menu.Item className='menuItem' key="8">Team 2</Menu.Item>
+            {teams.map(team => <Menu.Item className='menuItem' key={itemKeys++}>{team.name}</Menu.Item>)}
           </SubMenu>
-          <Menu.Item className='menuItem' key="9" icon={''}>
+          <Menu.Item className='menuItem' key={itemKeys++} icon={''}>
             Files
           </Menu.Item>
+
+          {/* TEMPORARY LOGOUT */}
+          <Menu.Item className='menuItem' key={itemKeys++} icon={''} onClick={() => auth.signOut()}>
+            Log Out
+          </Menu.Item>
+
         </Menu>
       </Sider>
       <Layout className="layout" >

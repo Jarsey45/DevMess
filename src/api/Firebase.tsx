@@ -12,8 +12,10 @@ import "firebase/firestore";
 import { UserData } from '../types/interfaces';
 
 
+
 // For Firebase JS SDK v7.20.0 and later, measurementId is optional
 import { FIREBASE_CONFIG } from './Env'
+import { loadFriends, loadTeams } from "../features/loginReducers";
 
 //TODO: Add rules to firestoreDB after goin public
 firebase.initializeApp(FIREBASE_CONFIG);
@@ -50,16 +52,19 @@ export const LoginUser = async (user: UserData, additionalData?: {}) => {
         status: true
       }, { merge: true })
 
+      
+
       return Promise.resolve(
         {
           status: true,
           data: {
             username: userDbData?.username,
             id: user.uid,
-            token: userToken
+            token: userToken,
           }
         }
       );
+
     }
     return Promise.resolve({ status: false, data: {} });
   } catch (e) {
@@ -86,7 +91,7 @@ export const RegisterUser = async (user: UserData, additionalData: {}) => {
       const { user } = userCredential;
 
       //adding new doc to firebase db
-      let docData = {
+      const docData = {
         last_logged: firebase.firestore.Timestamp.fromDate(new Date()),
         email: mail,
         status: true,
@@ -96,6 +101,24 @@ export const RegisterUser = async (user: UserData, additionalData: {}) => {
       firestore.collection('users').doc(user?.uid).set(docData)
         .then(() => {
           console.log('added user')
+
+          const promises: Array<Promise<void>> = [];
+
+          //adding friends collection with test user, bcs no one should be sad to have no friends 
+          promises.push(
+            firestore.collection('users').doc(user?.uid).collection('friends').doc('nv8fD0il4HbOfS39dgfPIpzI64E2').set({ name: 'Test', uid: 'nv8fD0il4HbOfS39dgfPIpzI64E2' })
+          );
+
+          promises.push(
+            firestore.collection('users').doc(user?.uid).collection('teams').doc('TestGroupID').set(
+              {
+                name: 'TestGroup',
+                tid: 'TestGroupID'
+              }
+            )
+          );
+
+          Promise.all(promises).then(() => console.log('added collections'));
         })
         .catch(err => console.log("An error occured", '=>', err))
 
@@ -110,4 +133,25 @@ export const RegisterUser = async (user: UserData, additionalData: {}) => {
     });
 
   return false;
+}
+
+export const getFriendsAndGroup = async (uid: string) => {
+
+  try {
+
+    //setting user Friends and Teams list to redux store
+    const userFriends = await firestore.collection('users').doc(uid).collection('friends').get();
+    const friends = userFriends.docs.map(doc => doc.data());
+
+    const userTeams = await firestore.collection('users').doc(uid).collection('teams').get();
+    const teams = userTeams.docs.map(doc => doc.data());
+
+
+    return { teams: (teams ?? []), friends: (friends ?? []) };
+
+
+  }
+  catch (err) { console.log("Something went wrong", "=>", err) }
+
+  return { teams: [], friends: [] };
 }

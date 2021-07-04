@@ -1,4 +1,6 @@
-import { MetroProps } from '../../types/interfaces'
+//import { useEffect } from 'react'
+import { useSelector } from 'react-redux'
+import { RootState } from '../../app/store'
 import MetroView from './MetroView'
 
 /**
@@ -6,11 +8,15 @@ import MetroView from './MetroView'
  * @param props
  * @returns 
  * */
-const MetroFView = (props: MetroProps) => {
-  console.log(localStorage.getItem('TOKEN'))
+const MetroFView = () => {
+  //console.log(localStorage.getItem('TOKEN'))
+  const friends = useSelector((state: RootState) => state.login.friends);
+  const teams = useSelector((state: RootState) => state.login.teams);
+
+
 
   return (
-    <MetroView></MetroView>
+    <MetroView teams={teams} friends={friends} ></MetroView>
   )
 }
 

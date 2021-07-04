@@ -8,6 +8,14 @@ interface InitState {
     status: boolean;
     username: string;
   };
+  friends: Array<{
+    name: string;
+    uid: string;
+  }>
+  teams: Array<{
+    name: string;
+    tid: string;
+  }>
   alerts: Array<{
     element: {
       title: string;
@@ -24,6 +32,8 @@ const initialState: InitState = {
     status: false,
     username: ''
   },
+  friends: [],
+  teams: [],
   alerts: []
 }
 
@@ -41,13 +51,19 @@ export const loginSlice = createSlice({
     },
     disableAlert: (state, action) => {
       state.alerts = state.alerts.filter(el => el.id !== action.payload)
+    },
+    loadFriends: (state, action) => {
+      state.friends = action.payload;
+    },
+    loadTeams: (state, action) => {
+      state.teams = action.payload;
     }
   }
 
 })
 
 
-export const { userLogin, addAlert, disableAlert } = loginSlice.actions;
+export const { userLogin, addAlert, disableAlert, loadFriends, loadTeams } = loginSlice.actions;
 
 export default loginSlice.reducer;
 

@@ -13,9 +13,15 @@ export interface LoginProps {
   handleClick: (data: UserData) => Promise<void>;
   setRegister: () => void;
 }
-
-export interface MetroProps {
-
+export interface MetroViewProps {
+  friends: Array<{
+    name: string;
+    uid: string;
+  }>,
+  teams: Array<{
+    name: string,
+    tid: string
+  }>
 }
 
 //YET TO CONFIGURE

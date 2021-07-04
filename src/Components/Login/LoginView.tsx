@@ -12,6 +12,7 @@ import { LoginUser, RegisterUser } from '../../api/Firebase';
 import { RootState } from '../../app/store';
 import { addAlert, disableAlert, userLogin } from '../../features/loginReducers';
 import { useWindowSize } from '../../features/Hooks';
+import { CodeSandboxCircleFilled } from '@ant-design/icons';
 const { Header, Content, Footer } = Layout;
 
 /**
@@ -42,6 +43,7 @@ const LoginView: React.FC = () => {
           console.log('Logged', '=>', didLogIn.data)
           dispatch(userLogin(didLogIn.data));
           history.push('/metro')
+
         }
         else
           dispatch(
@@ -55,6 +57,7 @@ const LoginView: React.FC = () => {
               }
             )
           )
+
         break;
       case "register":
         const didRegister = await RegisterUser(data, {});
