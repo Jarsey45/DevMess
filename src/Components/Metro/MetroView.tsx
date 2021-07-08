@@ -1,16 +1,12 @@
-import { Layout, Menu } from 'antd';
-import {
-  TeamOutlined,
-  MessageOutlined,
-  HomeOutlined,
-  CoffeeOutlined
-} from '@ant-design/icons'
+import { Layout, Menu } from 'antd'
 import '../../styles/antd_stylesheet.less';
 import logo from '../images/logoMetro.png'
 import { useState } from 'react';
 import { auth } from '../../api/Firebase';
 import { MetroViewProps } from '../../types/interfaces';
-const { Header, Content, Sider } = Layout;
+import { MessageOutlined, TeamOutlined } from '@ant-design/icons/lib/icons';
+
+const { Sider } = Layout;
 const { SubMenu } = Menu;
 
 /** 
@@ -18,8 +14,8 @@ const { SubMenu } = Menu;
  * @param props
  * @returns 
  * */
-const MetroView: React.FC<MetroViewProps> = ({ teams, friends }) => {
-  let itemKeys = 0;
+const MetroView: React.FC<MetroViewProps> = ({ teams, friends, makeMenuItem, optionComponent }) => {
+  let itemKeys = 0; //Made just for react keys purposes
   const [collapsed, onCollapse] = useState(false);
   console.log(teams, friends)
 
@@ -30,38 +26,54 @@ const MetroView: React.FC<MetroViewProps> = ({ teams, friends }) => {
           <img alt="logo" src={logo} className='logo' />
         </div>
         <Menu className='menu' defaultSelectedKeys={['0']} mode="inline">
-          <Menu.Item className='menuItem' key={(itemKeys++).toString()} icon={<HomeOutlined />}  >
-            Dashboard
-          </Menu.Item>
-          <Menu.Item className='menuItem' key={itemKeys++} icon={<CoffeeOutlined />}>
-            Chilling (DW)
-          </Menu.Item>
-          <SubMenu className='subMenu' key="sub1" icon={<MessageOutlined />} title="Messages">
-            {friends.map(friend => <Menu.Item className='menuItem' key={itemKeys++}>{friend.name}</Menu.Item>)}
+          {makeMenuItem({
+            type: "dashboard",
+            key: itemKeys++
+          }) as JSX.Element}
+
+          {makeMenuItem({
+            type: "coffee",
+            key: itemKeys++
+          }) as JSX.Element}
+
+          <SubMenu className='subMenu' key="sub1" icon={<MessageOutlined />} title="Messages" >
+            {friends.map(friend => makeMenuItem({
+              type: "friend",
+              key: itemKeys++,
+              data: {
+                _id: friend.uid,
+                _name: friend.name
+              }
+            }))}
           </SubMenu>
           <SubMenu className='subMenu' key="sub2" icon={<TeamOutlined />} title="Teams">
-            {teams.map(team => <Menu.Item className='menuItem' key={itemKeys++}>{team.name}</Menu.Item>)}
+            {teams.map(team => makeMenuItem({
+              type: "team",
+              key: itemKeys++,
+              data: {
+                _id: team.tid,
+                _name: team.name
+              }
+            }))}
           </SubMenu>
-          <Menu.Item className='menuItem' key={itemKeys++} icon={''}>
-            Files
-          </Menu.Item>
+          {makeMenuItem({
+            type: "settings",
+            key: itemKeys++
+          }) as JSX.Element}
 
           {/* TEMPORARY LOGOUT */}
-          <Menu.Item className='menuItem' key={itemKeys++} icon={''} onClick={() => auth.signOut()}>
+          <Menu.Item
+            className='menuItem'
+            key={itemKeys++}
+            icon={''}
+            onClick={() => auth.signOut()}>
             Log Out
           </Menu.Item>
 
         </Menu>
       </Sider>
-      <Layout className="layout" >
-        <Header className="header" style={{ padding: 0 }} />
-        <Content className='content' >
-          <div className="contentScreen" >
-            PUT OPTION COMPONENT HERE
-          </div>
-        </Content>
-      </Layout>
-    </Layout>
+      {optionComponent}
+    </Layout >
   )
 }
 

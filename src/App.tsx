@@ -33,7 +33,7 @@ function App() {
         setLogged(false);
       }
     })
-  }, [])
+  }, [dispatch])
 
   return (
     <div className="App">

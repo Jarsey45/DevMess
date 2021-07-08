@@ -7,11 +7,18 @@ export interface UserData {
   remember?: boolean;
 }
 
+
 //LOGIN/SIGNUP VIEWS PROPS
 export interface LoginProps {
   size: { WindowHeight: number, WindowWidth: number }
   handleClick: (data: UserData) => Promise<void>;
   setRegister: () => void;
+}
+
+export interface MetroOptions {
+  type: ("friend" | "team" | "dashboard" | "settings" | "coffee"), //friend, group
+  key: (number | null), // 
+  data?: ChatData;
 }
 export interface MetroViewProps {
   friends: Array<{
@@ -21,8 +28,25 @@ export interface MetroViewProps {
   teams: Array<{
     name: string,
     tid: string
-  }>
+  }>,
+  makeMenuItem: (object: MetroOptions) => any;
+  optionComponent: JSX.Element
 }
+
+//METRO OPTIONS COMPONENT INFTERFACES
+export interface DashboardViewProps {
+
+}
+
+export interface CoffeeViewProps {
+
+}
+
+export interface ChatData {
+  _id: string | null;
+  _name: string | null;
+}
+
 
 //YET TO CONFIGURE
 export interface AlertProps {

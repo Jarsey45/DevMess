@@ -12,7 +12,6 @@ import { LoginUser, RegisterUser } from '../../api/Firebase';
 import { RootState } from '../../app/store';
 import { addAlert, disableAlert, userLogin } from '../../features/loginReducers';
 import { useWindowSize } from '../../features/Hooks';
-import { CodeSandboxCircleFilled } from '@ant-design/icons';
 const { Header, Content, Footer } = Layout;
 
 /**
