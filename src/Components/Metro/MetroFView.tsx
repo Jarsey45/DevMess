@@ -4,7 +4,7 @@ import {
   CoffeeOutlined
 } from '@ant-design/icons'
 import { Menu } from 'antd';
-import { useEffect, useState } from 'react';
+import { useState } from 'react';
 import { useSelector } from 'react-redux'
 import { RootState } from '../../app/store'
 import { MetroOptions } from '../../types/interfaces';
@@ -52,11 +52,6 @@ const MetroFView = () => {
       }
     </Menu.Item >
   }
-
-  useEffect(() => {
-
-    console.log(optionState);
-  }, [optionState])
 
   return (
     <MetroView

@@ -15,8 +15,6 @@ import { UserData } from '../types/interfaces';
 
 // For Firebase JS SDK v7.20.0 and later, measurementId is optional
 import { FIREBASE_CONFIG } from './Env'
-import { userLogin } from "../features/loginReducers";
-import { message } from "antd";
 
 
 //TODO: Add rules to firestoreDB after goin public
@@ -73,6 +71,37 @@ export const LoginUser = async (user: UserData, additionalData?: {}) => {
     //throw new Error(e); TODO: handle throwing error without react base error handling
     console.error(`Error: ${e.code}`, '=>', e.message)
     return Promise.resolve({ status: false, data: {} });
+  }
+}
+
+export const getUserData = async () => {
+  if (auth.currentUser !== null) {
+    const { uid } = auth.currentUser;
+    //getting user Username
+    const userDoc = await firestore.collection('users').doc(uid).get();
+    const userDbData = userDoc.data();
+
+    //getting User token
+    const userToken = await auth.currentUser?.getIdToken();
+
+    //changing user LastLogin Date
+    firestore.collection('users').doc(uid).set({
+      last_logged: firebase.firestore.Timestamp.fromDate(new Date()),
+      status: true
+    }, { merge: true })
+
+    return {
+      username: userDbData?.username,
+      id: uid,
+      token: userToken,
+      status: true
+    }
+  }
+  return {
+    username: "",
+    id: "",
+    token: "",
+    status: false
   }
 }
 
@@ -170,13 +199,42 @@ export const getLatestMessages = async (chatId: string, timestamp: Date, type: (
       const response = await firestore.collection('users').doc(uid).collection(type === 'friend' ? 'friends' : 'teams').doc(chatId).collection('messages').where("timestamp", "<", timestamp).orderBy("timestamp", "desc").limit(10).get();
       const messages = response.docs.map(doc => doc.data());
 
-      console.log(messages);
-      return messages;
+      return messages.reverse();
 
     } catch (err: any) {
       console.error(err);
     }
   }
   return [];
+}
+
+export const sendNewMessageToDb = async (content: string, chatId: string, uid: string, type: ('friend' | 'team'), username: string) => {
+  if (auth.currentUser !== null) {
+    switch (type) {
+      case "friend":
+        const chatRef = firestore.collection('users').doc(uid).collection('friends').doc(chatId).collection('messages').doc();
+
+        const messageData = {
+          content,
+          deleted: false,
+          timestamp: firebase.firestore.FieldValue.serverTimestamp(),
+          uid,
+          username
+        }
+
+        //TODO send data to recipient also xd
+
+        await chatRef.set(messageData);
+
+        return { isSend: true, sentContent: content, timestamp: messageData.timestamp }
+
+      case "team":
+        return { isSend: false, sentContent: null };
+
+      default:
+        return { isSend: false, sentContent: null };
+    }
+  }
+  return { isSend: false, sentContent: null };
 }
 

@@ -61,3 +61,13 @@ export interface AlertProps {
   handleCancel?: () => void;
   //...
 }
+
+
+
+export interface MessageInterface {
+  _name: string;
+  content: string;
+  deleted: boolean;
+  timestamp: any;
+  _uid: string;
+}

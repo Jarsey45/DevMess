@@ -46,6 +46,9 @@ export const loginSlice = createSlice({
       state.logged.status = true;
       localStorage.setItem('TOKEN', action.payload.token);
     },
+    userLoadData: (state, action) => {
+      state.logged = action.payload;
+    },
     addAlert: (state, action) => {
       state.alerts.push(action.payload)
     },
@@ -63,7 +66,7 @@ export const loginSlice = createSlice({
 })
 
 
-export const { userLogin, addAlert, disableAlert, loadFriends, loadTeams } = loginSlice.actions;
+export const { userLogin, addAlert, disableAlert, loadFriends, loadTeams, userLoadData } = loginSlice.actions;
 
 export default loginSlice.reducer;
 

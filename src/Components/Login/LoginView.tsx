@@ -39,7 +39,7 @@ const LoginView: React.FC = () => {
         const didLogIn = await LoginUser(data, {});
         if (didLogIn.status) {
 
-          console.log('Logged', '=>', didLogIn.data)
+          // console.log('Logged', '=>', didLogIn.data)
           dispatch(userLogin(didLogIn.data));
           history.push('/metro')
 

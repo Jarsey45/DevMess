@@ -9,9 +9,9 @@ import {
 import { useDispatch } from 'react-redux';
 
 import LoginView from './Components/Login/LoginView';
-import { auth, getFriendsAndGroup } from './api/Firebase';
+import { auth, getFriendsAndGroup, getUserData } from './api/Firebase';
 import MetroFView from './Components/Metro/MetroFView';
-import { loadFriends, loadTeams } from './features/loginReducers';
+import { loadFriends, loadTeams, userLoadData } from './features/loginReducers';
 
 function App() {
   const [isLogged, setLogged] = useState(false);
@@ -21,11 +21,16 @@ function App() {
     //todo do it better and more secure, and check if someone not trying to change isLogged
     auth.onAuthStateChanged(async (user) => {
       if (user) {
-        console.log(user);
         setLogged(true);
 
+        //set redux logged state after auth
+        const loggedData = await getUserData();
+        dispatch(userLoadData(loggedData))
 
+
+        //getting friends/teams from db
         const friendsAndGroupsObject = await getFriendsAndGroup();
+
         //adding friends and teams to state;
         dispatch(loadFriends(friendsAndGroupsObject.friends));
         dispatch(loadTeams(friendsAndGroupsObject.teams));

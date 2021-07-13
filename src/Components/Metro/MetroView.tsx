@@ -17,7 +17,7 @@ const { SubMenu } = Menu;
 const MetroView: React.FC<MetroViewProps> = ({ teams, friends, makeMenuItem, optionComponent }) => {
   let itemKeys = 0; //Made just for react keys purposes
   const [collapsed, onCollapse] = useState(false);
-  console.log(teams, friends)
+
 
   return (
     <Layout className='layout' >
