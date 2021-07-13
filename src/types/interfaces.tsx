@@ -42,6 +42,11 @@ export interface CoffeeViewProps {
 
 }
 
+export interface MessageProps {
+  content: string;
+  side: 'left' | 'right';
+}
+
 export interface ChatData {
   _id: string | null;
   _name: string | null;

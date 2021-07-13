@@ -25,9 +25,11 @@ function App() {
         setLogged(true);
 
 
-        const friendsAndGroupsObject = await getFriendsAndGroup(user.uid);
-        dispatch(loadFriends(friendsAndGroupsObject.friends))
-        dispatch(loadTeams(friendsAndGroupsObject.teams))
+        const friendsAndGroupsObject = await getFriendsAndGroup();
+        //adding friends and teams to state;
+        dispatch(loadFriends(friendsAndGroupsObject.friends));
+        dispatch(loadTeams(friendsAndGroupsObject.teams));
+
       }
       else {
         setLogged(false);

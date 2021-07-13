@@ -1,13 +1,16 @@
 /* eslint-disable no-underscore-dangle */
 import { configureStore, ThunkAction, Action } from '@reduxjs/toolkit';
-import loginReducers from '../features/loginReducers'
+import chatReducers from '../features/chatReducers';
+import loginReducers from '../features/loginReducers';
 
 
 export const store = configureStore({
   reducer: {
-    login: loginReducers
+    login: loginReducers,
+    chats: chatReducers
   }
 });
+
 
 export type AppDispatch = typeof store.dispatch;
 export type RootState = ReturnType<typeof store.getState>;

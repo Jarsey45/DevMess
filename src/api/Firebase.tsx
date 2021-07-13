@@ -15,7 +15,9 @@ import { UserData } from '../types/interfaces';
 
 // For Firebase JS SDK v7.20.0 and later, measurementId is optional
 import { FIREBASE_CONFIG } from './Env'
-import { loadFriends, loadTeams } from "../features/loginReducers";
+import { userLogin } from "../features/loginReducers";
+import { message } from "antd";
+
 
 //TODO: Add rules to firestoreDB after goin public
 firebase.initializeApp(FIREBASE_CONFIG);
@@ -52,7 +54,7 @@ export const LoginUser = async (user: UserData, additionalData?: {}) => {
         status: true
       }, { merge: true })
 
-      
+
 
       return Promise.resolve(
         {
@@ -135,23 +137,46 @@ export const RegisterUser = async (user: UserData, additionalData: {}) => {
   return false;
 }
 
-export const getFriendsAndGroup = async (uid: string) => {
+export const getFriendsAndGroup = async () => {
+  if (auth.currentUser !== null) { // checking if user is logged 
+    const { uid } = auth.currentUser;
 
-  try {
+    try {
 
-    //setting user Friends and Teams list to redux store
-    const userFriends = await firestore.collection('users').doc(uid).collection('friends').get();
-    const friends = userFriends.docs.map(doc => doc.data());
+      //setting user Friends and Teams list to redux store
+      const userFriends = await firestore.collection('users').doc(uid).collection('friends').get();
+      const friends = userFriends.docs.map(doc => doc.data());
 
-    const userTeams = await firestore.collection('users').doc(uid).collection('teams').get();
-    const teams = userTeams.docs.map(doc => doc.data());
-
-
-    return { teams: (teams ?? []), friends: (friends ?? []) };
+      const userTeams = await firestore.collection('users').doc(uid).collection('teams').get();
+      const teams = userTeams.docs.map(doc => doc.data());
 
 
+      return { teams: (teams ?? []), friends: (friends ?? []) };
+
+
+    }
+    catch (err) { console.log("Something went wrong", "=>", err) }
   }
-  catch (err) { console.log("Something went wrong", "=>", err) }
-
   return { teams: [], friends: [] };
 }
+
+export const getLatestMessages = async (chatId: string, timestamp: Date, type: ('friend' | 'team')) => {
+  if (auth.currentUser !== null) {
+    const { uid } = auth.currentUser;
+
+    try {
+
+      //requests 10 messages before given timestamp
+      const response = await firestore.collection('users').doc(uid).collection(type === 'friend' ? 'friends' : 'teams').doc(chatId).collection('messages').where("timestamp", "<", timestamp).orderBy("timestamp", "desc").limit(10).get();
+      const messages = response.docs.map(doc => doc.data());
+
+      console.log(messages);
+      return messages;
+
+    } catch (err: any) {
+      console.error(err);
+    }
+  }
+  return [];
+}
+

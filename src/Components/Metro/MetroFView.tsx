@@ -46,7 +46,10 @@ const MetroFView = () => {
         }
       })()}
       onClick={() => { setOptionState(object) }} >
-      {object.type.charAt(0).toUpperCase() + object.type.slice(1)}
+      {(object.type === 'friend' || object.type === 'team') ?
+        (object.data?._name ?? 'error') :
+        (object.type.charAt(0).toUpperCase() + object.type.slice(1))
+      }
     </Menu.Item >
   }
 

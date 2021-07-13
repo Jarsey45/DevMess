@@ -34,7 +34,7 @@ const OptionComponentView: React.FC<MetroOptions> = ({ type, data }) => {
   return (
     <Layout className="layout" >
       <Header className="header" style={{ padding: 0 }} />
-      <Content className='content' >
+      <Content className='contentOption' >
         <div className="contentScreen" >
           {componentElement}
         </div>

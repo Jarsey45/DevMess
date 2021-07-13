@@ -1,3 +1,9 @@
+@desktop:   ~"only screen and (min-width: 960px) and (max-width: 1199px)";
+@tablet:   ~"only screen and (min-width: 720px) and (max-width: 959px)";
+@medium:~"only screen and (min-width: 360px) and (max-width: 769px)";
+@phone:     ~"only screen and (min-width: 240px) and(max-width: 359px)";
+
+
 @master-color: #c42847 ;
 @scnd-color: #de3c4b;
 @form-color: #c42847;
@@ -41,9 +47,9 @@
 
 .content{
   background: @bckgrd-color;
-  padding: 0 50px;
+  padding: 0 35px;
   display:block;
-  //height:100%;
+  height:100%;
 }
 
 .form{
@@ -97,14 +103,109 @@
   background: @master-color;
 }
 
+.contentOption {
+  background: @bckgrd-color;
+  padding: 24px 32px;
+  display: block;
+  height: 100% ;
+}
 .contentScreen{
-  padding: 24px;
+  position: relative;
+  padding: 10px;
   border-radius: 5px;
-  margin: 1%;
-  min-height: 380px;
-  max-height: 95%;
+  height: 100%;
+  min-width: 40vw;
   background: @menu-color;
   color: @text-color;
+}
+
+//MESSAGE STYLES
+.loadMoreButton{
+  color: @text-color;
+  background-color: #212121;
+  border-color: #313131;
+}
+
+.loadMoreButton:hover{
+  background-color: #111111;
+  border-color: #212121;
+}
+
+.loadMoreButton:focus{
+  color: @text-color;
+  background-color: #212121;
+  border-color: #313131;
+  transition: 0.5s;
+}
+.messagesScroll{
+  
+
+  position: absolute;
+  overflow: auto;
+  // overflow-x: hidden;
+  top:55px;
+  width: 95%;
+  @media @desktop{
+    width:95%;
+  }
+  @media @tablet {
+    width: 95%;
+  }
+  @media @medium {
+    width: 92%;
+  }
+  @media @phone{
+    width: 80%;
+  }
+  @height : calc(100% - (3% + 80px));
+  max-height: @height;
+  
+}
+.messageFlexboxLeft{
+  display:-webkit-box;
+  display:-moz-box;
+  display:-ms-flexbox;
+  display:flex;
+  flex-direction: row;
+  //align-items: flex-end;
+  max-width: 50%;
+  
+}
+.messageFlexboxRight{
+  display:-webkit-box;
+  display:-moz-box;
+  display:-ms-flexbox;
+  display:flex;
+  flex-direction: row-reverse;
+  //align-items: flex-end;
+  max-width: 50%;
+  
+}
+.messageContent{
+
+  margin: 5px 0;
+  padding: 5px;
+  height: fit-content;
+  width: fit-content;
+  text-align: left;
+  overflow-wrap: break-word;
+  width: -moz-fit-content;
+  border-radius: 10px 10px 10px 10px;
+  background-color: #000;  
+}
+
+.sendInputFlexbox{
+  display:-webkit-box;
+  display:-moz-box;
+  display:-ms-flexbox;
+  display:flex;
+  flex-direction: row;
+  align-items: flex-end;
+  position:absolute;
+  bottom: 10px;
+  left: 2.5%;
+  margin: 0 auto;
+  width: 95%;
 }
 
 .footer {
