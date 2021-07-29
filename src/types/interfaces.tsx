@@ -70,4 +70,5 @@ export interface MessageInterface {
   deleted: boolean;
   timestamp: any;
   _uid: string;
+  _messageId?: string;
 }

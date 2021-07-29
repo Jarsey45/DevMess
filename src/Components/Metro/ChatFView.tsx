@@ -2,8 +2,8 @@ import { SendOutlined } from '@ant-design/icons';
 import { Button, Col, Divider, Input, Row } from 'antd';
 import React, { useEffect, useState } from 'react';
 import { useDispatch, useSelector } from 'react-redux';
-import { getLatestMessages, sendNewMessageToDb } from '../../api/Firebase';
-import { RootState } from '../../app/store';
+import { auth, getLatestMessages, sendNewMessageToDb, unsubscribeToDb } from '../../api/Firebase';
+import { RootState, store } from '../../app/store';
 import { addChatObject, addManyMessagesToChat, addMessageToChat } from '../../features/chatReducers';
 import { Message } from '../../features/Message';
 import { ChatData, MessageInterface } from '../../types/interfaces';
@@ -28,9 +28,12 @@ const ChatFView: React.FC<ChatData> = ({ _id, _name }) => {
             content: mess.content,
             deleted: mess.deleted,
             timestamp: new Date(mess.timestamp.seconds * 1000).toJSON(),
-            _name: 'test' //TODO query 
+            _name: userState.username, //TODO query
+            _messageId: mess._messageId
           }
         });
+
+        //TODO: should update LatestTimestamp with timestamp of last message
 
         dispatch(addManyMessagesToChat({
           data: messageData,
@@ -43,7 +46,6 @@ const ChatFView: React.FC<ChatData> = ({ _id, _name }) => {
   }
 
   const sendNewMessage = async (content: string) => {
-    console.log(content.length);
     if (validateMessage(content)) {
       try {
         if (_id !== null) {
@@ -66,20 +68,47 @@ const ChatFView: React.FC<ChatData> = ({ _id, _name }) => {
 
         }
 
-      } catch (e) { console.error(e) };
+      } catch (err) { console.error(err) };
     }
   }
 
+
+
   useEffect(() => {
     dispatch(addChatObject({ chats, _id }))
+
+    if (_id !== null) // var xd
+    {
+      //TODO: change the 'any' type
+      const unsub = unsubscribeToDb(_id, 'friend', (message: MessageInterface) => {
+        if (message._uid !== auth.currentUser?.uid) {
+          console.log(message);
+          dispatch(addMessageToChat({
+            data: message as MessageInterface,
+            chats: store.getState().chats.chats, // not the best way todo: use redux thunk
+            chatId: _id
+          }))
+        }
+      })
+
+      return () => { // cleanup
+        unsub();
+      }
+    }
     // eslint-disable-next-line react-hooks/exhaustive-deps
   }, []);
 
+
+
+
   useEffect(() => {
     if (currentChat?.messages && currentChat.messages.length === 0) {
+
       requestMessages();
     }
+
     //console.log(currentChat);
+
     // eslint-disable-next-line react-hooks/exhaustive-deps
   }, [currentChat])
 
@@ -87,9 +116,7 @@ const ChatFView: React.FC<ChatData> = ({ _id, _name }) => {
 
   return (
     <>
-
       <Divider orientation="left" style={{ color: '#a1a1a1', borderTopColor: '#212121' }}> {_name} </Divider>
-
       <div className="messagesScroll">
         <Row>
           <Col span={24}>
@@ -110,6 +137,9 @@ const ChatFView: React.FC<ChatData> = ({ _id, _name }) => {
         <Input
           placeholder={'Enter your message'}
           onChange={(e) => setInputContent(e.target.value)}
+          onKeyDown={(e) => {
+            if (e.key === "Enter") sendNewMessage(inputContent);
+          }}
           value={inputContent} />
         <Button
           type="primary"

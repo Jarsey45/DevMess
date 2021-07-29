@@ -9,7 +9,7 @@ import "firebase/analytics";
 // Add the Firebase products that you want to use
 import "firebase/auth";
 import "firebase/firestore";
-import { UserData } from '../types/interfaces';
+import { MessageInterface, UserData } from '../types/interfaces';
 
 
 
@@ -197,7 +197,9 @@ export const getLatestMessages = async (chatId: string, timestamp: Date, type: (
 
       //requests 10 messages before given timestamp
       const response = await firestore.collection('users').doc(uid).collection(type === 'friend' ? 'friends' : 'teams').doc(chatId).collection('messages').where("timestamp", "<", timestamp).orderBy("timestamp", "desc").limit(10).get();
-      const messages = response.docs.map(doc => doc.data());
+      const messages = response.docs.map(doc => { let data = doc.data(); data._messageId = doc.id; return data });
+
+      //console.log(messages);
 
       return messages.reverse();
 
@@ -208,11 +210,41 @@ export const getLatestMessages = async (chatId: string, timestamp: Date, type: (
   return [];
 }
 
+export const unsubscribeToDb = (chatId: string, type: ('friend' | 'team'), callback: Function) => {
+  if (auth.currentUser !== null) {
+    const { uid } = auth.currentUser;
+
+    const sub = firestore.collection('users').doc(uid).collection(type === 'friend' ? 'friends' : 'teams').doc(chatId).collection('messages').onSnapshot(async () => {
+      //todo do it better
+      const response = await firestore.collection('users').doc(uid).collection(type === 'friend' ? 'friends' : 'teams').doc(chatId).collection('messages').orderBy("timestamp", "desc").limit(1).get();
+
+      const newMessage = response.docs.map(doc => { let data = doc.data(); data._messageId = doc.id; return data; });
+      const mess = newMessage[0];
+
+      if (mess !== null && mess.timestamp !== null)
+        callback({
+          _name: mess.username,
+          content: mess.content,
+          deleted: mess.deleted,
+          timestamp: (new Date(mess.timestamp.seconds * 1000)).toJSON(),
+          _uid: mess.uid,
+          _messageId: mess._messageId
+        } as MessageInterface)
+    });
+
+    return sub;
+  }
+  return () => {
+    //cleanup
+  };
+}
+
 export const sendNewMessageToDb = async (content: string, chatId: string, uid: string, type: ('friend' | 'team'), username: string) => {
   if (auth.currentUser !== null) {
     switch (type) {
       case "friend":
         const chatRef = firestore.collection('users').doc(uid).collection('friends').doc(chatId).collection('messages').doc();
+        const chatRecRef = firestore.collection('users').doc(chatId).collection('friends').doc(uid).collection('messages').doc();
 
         const messageData = {
           content,
@@ -225,6 +257,7 @@ export const sendNewMessageToDb = async (content: string, chatId: string, uid: s
         //TODO send data to recipient also xd
 
         await chatRef.set(messageData);
+        await chatRecRef.set(messageData);
 
         return { isSend: true, sentContent: content, timestamp: messageData.timestamp }
 
