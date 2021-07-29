@@ -82,7 +82,7 @@ const ChatFView: React.FC<ChatData> = ({ _id, _name }) => {
       //TODO: change the 'any' type
       const unsub = unsubscribeToDb(_id, 'friend', (message: MessageInterface) => {
         if (message._uid !== auth.currentUser?.uid) {
-          console.log(message);
+          //console.log(message);
           dispatch(addMessageToChat({
             data: message as MessageInterface,
             chats: store.getState().chats.chats, // not the best way todo: use redux thunk

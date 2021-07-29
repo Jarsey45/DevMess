@@ -47,15 +47,13 @@ export const chatSlice = createSlice({
     },
 
     addMessageToChat: (state, action) => {
-      console.log("ADD MESSAGE TO CHAT: ", action.payload)
       const { data, chats, chatId } = action.payload;
       let newArray = chats.map((obj: any) => JSON.parse(JSON.stringify(obj))); //deep copy (not best approach)
 
-      console.log(newArray);
+
       const req = doesIdExistInArray(chatId, chats);
       if (req.exist && req.index !== null) { // TODO: get id for all messages
         let lastIndex = newArray[req.index].messages.length
-        console.log(newArray[req.index].messages[lastIndex - 1], data._messageId)
         if (newArray[req.index].messages[lastIndex - 1]._messageId !== data._messageId)
           newArray[req.index].messages.push(data as Message);
         state.chats = newArray;
